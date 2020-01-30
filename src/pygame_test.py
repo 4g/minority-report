@@ -7,7 +7,7 @@ import sys
 camera = cv2.VideoCapture(0)
 pygame.init()
 pygame.display.set_caption("OpenCV camera stream on Pygame")
-screen = pygame.display.set_mode([1280,720])
+screen = pygame.display.set_mode([640, 480])
 
 try:
 	while True:
@@ -22,7 +22,8 @@ try:
 		for event in pygame.event.get():
 			if event.type == KEYDOWN:
 				sys.exit(0)
-except (KeyboardInterrupt,SystemExit):
+
+except (KeyboardInterrupt, SystemExit):
 	pygame.quit()
 	cv2.destroyAllWindows()
 

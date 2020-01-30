@@ -25,7 +25,7 @@ def draw(image, poses, threshold=0.2):
 
 def main(video):
 
-    engine = PoseEngine("../gesturelib/models/posenet_mobilenet_v1_075_481_641_quant_decoder_edgetpu.tflite")
+    engine = PoseEngine("../models/posenet_mobilenet_v1_075_481_641_quant_decoder_edgetpu.tflite")
     cam = Camera(path=video, fps=30)
     cam.start()
 

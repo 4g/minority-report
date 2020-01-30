@@ -172,6 +172,28 @@ class PoseEngine(BasicEngine):
 
         return poses, inference_time
 
+    def ParseOutput(self, output):
+        inference_time, output = output
+        outputs = [output[i:j] for i, j in zip(self._output_offsets, self._output_offsets[1:])]
+
+        keypoints = outputs[0].reshape(-1, len(KEYPOINTS), 2)
+        keypoint_scores = outputs[1].reshape(-1, len(KEYPOINTS))
+        pose_scores = outputs[2]
+        nposes = int(outputs[3][0])
+        assert nposes < outputs[0].shape[0]
+
+        # Convert the poses to a friendlier format of keypoints with associated
+        # scores.
+        poses = []
+        for pose_i in range(nposes):
+            keypoint_dict = {}
+            for point_i, point in enumerate(keypoints[pose_i]):
+                keypoint = Keypoint(KEYPOINTS[point_i], point,
+                                    keypoint_scores[pose_i, point_i])
+                if self._mirror: keypoint.yx[1] = self.image_width - keypoint.yx[1]
+                keypoint_dict[KEYPOINTS[point_i]] = keypoint
+            poses.append(Pose(keypoint_dict, pose_scores[pose_i]))
+
 
 if __name__ == "__main__":
     from camera import Camera
